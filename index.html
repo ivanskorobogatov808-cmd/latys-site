@@ -3,460 +3,55 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LatysTime — Магазин сервера</title>
+    <title>LatysTime — Магазин</title>
     <style>
-        /* ===== ОБЩИЕ СБРОСЫ ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #0b0a0e;
-            color: #f0e6d3;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-image: radial-gradient(circle at 30% 20%, #1f1033 0%, #0b0a0e 85%);
-            padding: 20px 10px;
-        }
-
-        /* ===== ЛЕТАЮЩИЕ ПРИЗРАКИ ===== */
-        .floating-ghosts {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .ghost {
-            position: absolute;
-            font-size: 34px;
-            opacity: 0.12;
-            animation: floatGhost linear infinite;
-            color: #b388ff;
-        }
-
-        .ghost:nth-child(1) { top: 5%; left: 3%; animation-duration: 20s; font-size: 46px; }
-        .ghost:nth-child(2) { top: 80%; left: 88%; animation-duration: 24s; font-size: 38px; }
-        .ghost:nth-child(3) { top: 45%; left: 95%; animation-duration: 28s; font-size: 56px; }
-        .ghost:nth-child(4) { top: 90%; left: 5%; animation-duration: 22s; font-size: 32px; }
-        .ghost:nth-child(5) { top: 30%; left: 55%; animation-duration: 30s; font-size: 48px; }
-
-        @keyframes floatGhost {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(20px, -25px) rotate(6deg); }
-            50% { transform: translate(-15px, -40px) rotate(-6deg); }
-            75% { transform: translate(25px, -20px) rotate(4deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
-        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1100px;
-            width: 100%;
-        }
-
-        .glass-card {
-            background: rgba(18, 14, 28, 0.88);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 165, 0, 0.15);
-            border-radius: 40px;
-            padding: 45px 35px;
-            margin-bottom: 35px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-            transition: 0.3s ease;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(255, 165, 0, 0.3);
-            box-shadow: 0 30px 70px rgba(179, 136, 255, 0.08);
-        }
-
-        /* ===== ЗАГОЛОВКИ ===== */
-        h1 {
-            font-size: 48px;
-            font-weight: 900;
-            text-align: center;
-            background: linear-gradient(135deg, #ffab40, #ff6f00, #b388ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ffcc80;
-            margin-bottom: 25px;
-            text-align: center;
-            border-bottom: 2px solid rgba(255, 165, 0, 0.15);
-            padding-bottom: 12px;
-        }
-
-        /* ===== IP И КНОПКА КОПИРОВАНИЯ ===== */
-        .ip-block {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin: 15px 0 10px;
-        }
-
-        .ip-address {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 165, 0, 0.2);
-            border-radius: 60px;
-            padding: 14px 30px;
-            font-size: 22px;
-            font-weight: 700;
-            font-family: 'Courier New', monospace;
-            color: #ffcc80;
-            letter-spacing: 2px;
-        }
-
-        .btn-copy {
-            background: linear-gradient(145deg, #ff8a65, #e65100);
-            border: none;
-            padding: 14px 38px;
-            border-radius: 60px;
-            font-size: 18px;
-            font-weight: 800;
-            color: #0b0a0e;
-            cursor: pointer;
-            transition: 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            box-shadow: 0 6px 20px rgba(255, 165, 0, 0.25);
-        }
-
-        .btn-copy:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 35px rgba(255, 165, 0, 0.45);
-        }
-
-        /* ===== СЕТКА КАРТОЧЕК ТОВАРОВ ===== */
-        .shop-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 22px;
-            margin-top: 10px;
-        }
-
-        .product-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 165, 0, 0.08);
-            border-radius: 24px;
-            padding: 22px 16px 20px;
-            text-align: center;
-            transition: 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            border-color: #b388ff;
-            box-shadow: 0 12px 28px rgba(179, 136, 255, 0.08);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .product-card .name {
-            font-size: 22px;
-            font-weight: 800;
-            color: #ffe0b2;
-            margin-bottom: 8px;
-        }
-
-        .product-card .price {
-            font-size: 22px;
-            font-weight: 700;
-            color: #b388ff;
-            margin-bottom: 16px;
-            flex-grow: 1;
-        }
-
-        .btn-buy {
-            background: transparent;
-            border: 2px solid #b388ff;
-            color: #b388ff;
-            padding: 10px 28px;
-            border-radius: 40px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.25s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            width: 100%;
-            max-width: 160px;
-            margin-top: auto;
-        }
-
-        .btn-buy:hover {
-            background: #b388ff;
-            color: #0b0a0e;
-            box-shadow: 0 0 20px rgba(179, 136, 255, 0.25);
-        }
-
-        /* ===== ОНЛАЙН СТАТИСТИКА ===== */
-        .online-block {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 18px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 60px;
-            padding: 12px 28px;
-            border: 1px solid rgba(255, 165, 0, 0.06);
-            margin: 20px 0 5px;
-        }
-
-        .online-dot {
-            width: 14px;
-            height: 14px;
-            background: #66bb6a;
-            border-radius: 50%;
-            animation: pulse 1.6s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.6; }
-            50% { transform: scale(1.5); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.6; }
-        }
-
-        .online-number {
-            font-size: 32px;
-            font-weight: 800;
-            color: #66bb6a;
-        }
-
-        .online-label {
-            font-size: 15px;
-            color: #9575cd;
-            letter-spacing: 1px;
-        }
-
-        /* ===== ПОДВАЛ ===== */
-        .footer {
-            text-align: center;
-            color: #4a3f5e;
-            font-size: 14px;
-            padding: 15px 0 5px;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
-            margin-top: 10px;
-        }
-
-        /* ===== МОДАЛЬНОЕ ОКНО ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .modal {
-            background: rgba(18, 14, 28, 0.95);
-            border: 1px solid rgba(255, 165, 0, 0.2);
-            border-radius: 30px;
-            padding: 40px 35px;
-            max-width: 420px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
-        }
-
-        .modal h2 {
-            color: #ffcc80;
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .modal .product-name {
-            color: #b388ff;
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        .modal .product-price {
-            color: #ffab40;
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .modal input {
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 165, 0, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            font-size: 18px;
-            outline: none;
-            transition: 0.3s ease;
-            margin-bottom: 16px;
-        }
-
-        .modal input:focus {
-            border-color: #b388ff;
-            box-shadow: 0 0 20px rgba(179, 136, 255, 0.15);
-        }
-
-        .modal input::placeholder {
-            color: #4a3f5e;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-            padding: 14px 20px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-confirm {
-            background: linear-gradient(145deg, #ff8a65, #e65100);
-            color: #0b0a0e;
-        }
-
-        .btn-confirm:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 30px rgba(255, 165, 0, 0.3);
-        }
-
-        .btn-cancel {
-            background: transparent;
-            border: 2px solid #4a3f5e !important;
-            color: #9575cd;
-        }
-
-        .btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        /* ===== УВЕДОМЛЕНИЕ "УСПЕШНО" ===== */
-        .notification {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            z-index: 2000;
-            background: rgba(18, 14, 28, 0.95);
-            border: 2px solid #66bb6a;
-            border-radius: 20px;
-            padding: 20px 30px;
-            display: none;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            animation: slideIn 0.5s ease;
-        }
-
-        .notification.show {
-            display: flex;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(100px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .notification .icon {
-            font-size: 36px;
-        }
-
-        .notification .text {
-            font-size: 22px;
-            font-weight: 800;
-            color: #66bb6a;
-            letter-spacing: 2px;
-        }
-
-        /* ===== АДАПТИВ ===== */
-        @media (max-width: 700px) {
-            h1 { font-size: 34px; }
-            .glass-card { padding: 28px 16px; }
-            .ip-address { font-size: 16px; padding: 12px 18px; }
-            .btn-copy { font-size: 15px; padding: 12px 22px; }
-            .shop-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 15px; }
-            .product-card .name { font-size: 18px; }
-            .product-card .price { font-size: 18px; }
-            .section-title { font-size: 22px; }
-            .online-number { font-size: 26px; }
-            .modal { padding: 30px 20px; }
-            .notification { top: 15px; right: 15px; padding: 15px 20px; }
-            .notification .text { font-size: 18px; }
-        }
-
-        @media (max-width: 450px) {
-            .shop-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-            .product-card { padding: 16px 10px; }
-            .btn-buy { font-size: 13px; padding: 8px 14px; }
-            .modal-buttons { flex-direction: column; }
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',sans-serif; background:#0b0a0e; color:#f0e6d3; min-height:100vh; display:flex; flex-direction:column; align-items:center; background-image:radial-gradient(circle at 30% 20%,#1f1033 0%,#0b0a0e 85%); padding:20px 10px; }
+        .container { max-width:1100px; width:100%; }
+        .glass-card { background:rgba(18,14,28,0.88); backdrop-filter:blur(14px); border:1px solid rgba(255,165,0,0.15); border-radius:40px; padding:45px 35px; margin-bottom:35px; }
+        h1 { font-size:48px; font-weight:900; text-align:center; background:linear-gradient(135deg,#ffab40,#ff6f00,#b388ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:20px; }
+        .section-title { font-size:28px; font-weight:700; color:#ffcc80; text-align:center; border-bottom:2px solid rgba(255,165,0,0.15); padding-bottom:12px; margin-bottom:25px; }
+        .ip-block { display:flex; justify-content:center; flex-wrap:wrap; gap:15px; margin:15px 0 10px; }
+        .ip-address { background:rgba(255,255,255,0.04); border:1px solid rgba(255,165,0,0.2); border-radius:60px; padding:14px 30px; font-size:22px; font-weight:700; color:#ffcc80; }
+        .btn-copy { background:linear-gradient(145deg,#ff8a65,#e65100); border:none; padding:14px 38px; border-radius:60px; font-size:18px; font-weight:800; color:#0b0a0e; cursor:pointer; text-transform:uppercase; }
+        .shop-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:22px; }
+        .product-card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,165,0,0.08); border-radius:24px; padding:22px 16px; text-align:center; transition:0.3s; display:flex; flex-direction:column; align-items:center; }
+        .product-card:hover { transform:translateY(-8px); border-color:#b388ff; }
+        .product-card .name { font-size:22px; font-weight:800; color:#ffe0b2; margin-bottom:8px; }
+        .product-card .price { font-size:22px; font-weight:700; color:#b388ff; margin-bottom:16px; }
+        .btn-buy { background:transparent; border:2px solid #b388ff; color:#b388ff; padding:10px 28px; border-radius:40px; font-size:15px; font-weight:700; cursor:pointer; transition:0.25s; text-transform:uppercase; width:100%; max-width:160px; }
+        .btn-buy:hover { background:#b388ff; color:#0b0a0e; }
+        .online-block { display:flex; justify-content:center; align-items:center; gap:18px; background:rgba(255,255,255,0.02); border-radius:60px; padding:12px 28px; margin:20px 0 5px; border:1px solid rgba(255,165,0,0.06); }
+        .online-dot { width:14px; height:14px; background:#66bb6a; border-radius:50%; animation:pulse 1.6s ease-in-out infinite; }
+        @keyframes pulse { 0%{transform:scale(1);opacity:0.6;} 50%{transform:scale(1.5);opacity:1;} 100%{transform:scale(1);opacity:0.6;} }
+        .online-number { font-size:32px; font-weight:800; color:#66bb6a; }
+        .online-label { font-size:15px; color:#9575cd; letter-spacing:1px; }
+        .footer { text-align:center; color:#4a3f5e; font-size:14px; padding:15px 0; border-top:1px solid rgba(255,255,255,0.03); margin-top:10px; }
+        .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); z-index:1000; justify-content:center; align-items:center; }
+        .modal-overlay.active { display:flex; }
+        .modal { background:rgba(18,14,28,0.95); border:1px solid rgba(255,165,0,0.2); border-radius:30px; padding:40px 35px; max-width:420px; width:90%; text-align:center; }
+        .modal h2 { color:#ffcc80; font-size:28px; margin-bottom:8px; }
+        .modal .product-name { color:#b388ff; font-size:18px; }
+        .modal .product-price { color:#ffab40; font-size:26px; font-weight:700; margin:10px 0 20px; }
+        .modal input { width:100%; padding:14px 18px; border-radius:50px; border:1px solid rgba(255,165,0,0.2); background:rgba(255,255,255,0.05); color:#fff; font-size:18px; outline:none; margin-bottom:16px; }
+        .modal input:focus { border-color:#b388ff; }
+        .modal-buttons { display:flex; gap:12px; }
+        .modal-buttons button { flex:1; padding:14px 20px; border-radius:50px; font-size:16px; font-weight:700; border:none; cursor:pointer; transition:0.3s; text-transform:uppercase; }
+        .btn-confirm { background:linear-gradient(145deg,#ff8a65,#e65100); color:#0b0a0e; }
+        .btn-confirm:hover { transform:scale(1.02); }
+        .btn-cancel { background:transparent; border:2px solid #4a3f5e !important; color:#9575cd; }
+        .btn-cancel:hover { background:rgba(255,255,255,0.05); }
+        .notification { position:fixed; top:30px; right:30px; z-index:2000; background:rgba(18,14,28,0.95); border:2px solid #66bb6a; border-radius:20px; padding:20px 30px; display:none; align-items:center; gap:15px; }
+        .notification.show { display:flex; animation:slideIn 0.5s ease; }
+        @keyframes slideIn { from{opacity:0;transform:translateX(100px);} to{opacity:1;transform:translateX(0);} }
+        .notification .icon { font-size:36px; }
+        .notification .text { font-size:22px; font-weight:800; color:#66bb6a; letter-spacing:2px; }
+        @media(max-width:700px){ h1{font-size:34px;} .glass-card{padding:28px 16px;} .ip-address{font-size:16px;padding:12px 18px;} .btn-copy{font-size:15px;padding:12px 22px;} .shop-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:15px;} }
+        @media(max-width:450px){ .shop-grid{grid-template-columns:1fr 1fr;gap:12px;} .product-card{padding:16px 10px;} .btn-buy{font-size:13px;padding:8px 14px;} .modal-buttons{flex-direction:column;} }
     </style>
 </head>
 <body>
 
-    <!-- ===== ПРИЗРАКИ ===== -->
-    <div class="floating-ghosts">
-        <div class="ghost">👻</div>
-        <div class="ghost">🎃</div>
-        <div class="ghost">💀</div>
-        <div class="ghost">🦇</div>
-        <div class="ghost">🧙</div>
-    </div>
-
-    <!-- ===== УВЕДОМЛЕНИЕ "УСПЕШНО" ===== -->
-    <div class="notification" id="notification">
-        <span class="icon">✅</span>
-        <span class="text">УСПЕШНО!</span>
-    </div>
-
-    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <h2>💎 Покупка</h2>
@@ -470,18 +65,18 @@
         </div>
     </div>
 
-    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
-    <div class="container">
+    <div class="notification" id="notification">
+        <span class="icon">✅</span>
+        <span class="text">УСПЕШНО!</span>
+    </div>
 
-        <!-- ШАПКА С IP -->
+    <div class="container">
         <div class="glass-card">
             <h1>⚡ LatysTime</h1>
-
             <div class="ip-block">
                 <div class="ip-address" id="serverIp">mc-latysTime.ru</div>
                 <button class="btn-copy" onclick="copyIP()">📋 Копировать IP</button>
             </div>
-
             <div class="online-block">
                 <div class="online-dot"></div>
                 <div class="online-number" id="onlineCount">0</div>
@@ -489,26 +84,26 @@
             </div>
         </div>
 
-        <!-- ПРИВИЛЕГИИ -->
         <div class="glass-card">
             <div class="section-title">👑 Привилегии</div>
             <div class="shop-grid" id="privilegesList"></div>
         </div>
 
-        <!-- УСЛУГИ -->
         <div class="glass-card">
             <div class="section-title">🎃 Услуги и товары</div>
             <div class="shop-grid" id="servicesList"></div>
         </div>
 
-        <!-- ПОДВАЛ -->
         <div class="footer">
             <div style="font-size:13px;">© 2026 LatysTime — Все права защищены</div>
         </div>
-
     </div>
 
     <script>
+        // ===== ID DonatePay =====
+        const DONATE_ID = '1508516';
+        let selectedProduct = null;
+
         // ===== ТОВАРЫ =====
         const privileges = [
             { name: 'Элита', price: 250 },
@@ -526,13 +121,7 @@
             { name: 'Восстановление прав', price: 400 }
         ];
 
-        // ===== ID DonatePay (твой) =====
-        const DONATE_ID = '1508516';
-
-        // ===== ПЕРЕМЕННЫЕ ДЛЯ МОДАЛКИ =====
-        let selectedProduct = null;
-
-        // ===== ОТРИСОВКА КАРТОЧЕК =====
+        // ===== ОТРИСОВКА =====
         function renderShop(containerId, items) {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -549,7 +138,7 @@
             });
         }
 
-        // ===== ОТКРЫТЬ МОДАЛЬНОЕ ОКНО =====
+        // ===== МОДАЛКА =====
         function openModal(name, price) {
             selectedProduct = { name, price };
             document.getElementById('modalProductName').textContent = name;
@@ -558,13 +147,12 @@
             document.getElementById('modalOverlay').classList.add('active');
         }
 
-        // ===== ЗАКРЫТЬ МОДАЛЬНОЕ ОКНО =====
         function closeModal() {
             document.getElementById('modalOverlay').classList.remove('active');
             selectedProduct = null;
         }
 
-        // ===== ПОДТВЕРДИТЬ ПОКУПКУ (ИСПРАВЛЕНО) =====
+        // ===== ГЛАВНАЯ ФУНКЦИЯ (ПЕРЕХОД НА DONATEPAY) =====
         function confirmPurchase() {
             const nickname = document.getElementById('nicknameInput').value.trim();
             if (!nickname) {
@@ -575,82 +163,52 @@
                 alert('⚠️ Ник должен быть от 3 до 16 символов');
                 return;
             }
-
             if (!selectedProduct) return;
-
-            // Закрываем модалку
-            closeModal();
 
             const amount = selectedProduct.price;
             const productName = selectedProduct.name;
             
-            // Формируем ссылку на DonatePay
+            // ФОРМИРУЕМ ССЫЛКУ
             const donateUrl = `https://donatepay.ru/donate/${DONATE_ID}?amount=${amount}&custom=${encodeURIComponent(nickname)}&desc=${encodeURIComponent('Покупка: ' + productName)}`;
 
-            // ===== ПЕРЕНАПРАВЛЯЕМ В ТЕКУЩЕЙ ВКЛАДКЕ =====
+            // ЗАКРЫВАЕМ МОДАЛКУ
+            closeModal();
+
+            // ПРЯМОЙ ПЕРЕХОД НА DONATEPAY (ЭТО ГЛАВНОЕ!)
             window.location.href = donateUrl;
 
-            // Сохраняем информацию о покупке в localStorage
-            const purchase = {
-                nickname: nickname,
-                product: productName,
-                price: amount,
-                date: new Date().toISOString(),
-                status: 'pending'
-            };
-            
+            // Сохраняем в localStorage (для истории)
+            const purchase = { nickname, product: productName, price: amount, date: new Date().toISOString() };
             let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
             purchases.push(purchase);
             localStorage.setItem('purchases', JSON.stringify(purchases));
 
-            // ЗАГЛУШКА: ПОКАЗЫВАЕМ УВЕДОМЛЕНИЕ "УСПЕШНО" ЧЕРЕЗ 5 СЕКУНД
-            // (ПОТОМ ЗАМЕНИМ НА РЕАЛЬНЫЙ WEBHOOK ОТ DONATEPAY)
+            // Через 5 секунд показываем уведомление (имитация возврата с оплаты)
             setTimeout(() => {
-                showNotification();
-                sendToServer(nickname, productName);
+                document.getElementById('notification').classList.add('show');
+                setTimeout(() => document.getElementById('notification').classList.remove('show'), 5000);
+                console.log(`📤 Отправка на сервер: ${nickname} → ${productName}`);
             }, 5000);
         }
 
-        // ===== ПОКАЗАТЬ УВЕДОМЛЕНИЕ "УСПЕШНО" =====
-        function showNotification() {
-            const notification = document.getElementById('notification');
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
-        }
-
-        // ===== ОТПРАВКА НА СЕРВЕР (ЗАГЛУШКА) =====
-        function sendToServer(nickname, product) {
-            console.log(`📤 Отправка на сервер:`);
-            console.log(`   Игрок: ${nickname}`);
-            console.log(`   Привилегия: ${product}`);
-            console.log(`   Команда: lp user ${nickname} parent set ${product}`);
-            
-            // ПОТОМ ЗДЕСЬ БУДЕТ РЕАЛЬНЫЙ ЗАПРОС НА VDS
-        }
-
-        // ===== КНОПКА "КОПИРОВАТЬ IP" =====
+        // ===== КОПИРОВАТЬ IP =====
         function copyIP() {
             const ip = document.getElementById('serverIp').innerText;
-            navigator.clipboard.writeText(ip).then(() => {
-                alert('✅ IP скопирован: ' + ip);
-            }).catch(() => {
-                const textarea = document.createElement('textarea');
-                textarea.value = ip;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                alert('✅ IP скопирован: ' + ip);
-            });
+            navigator.clipboard.writeText(ip).then(() => alert('✅ IP скопирован: ' + ip))
+                .catch(() => {
+                    const t = document.createElement('textarea');
+                    t.value = ip;
+                    document.body.appendChild(t);
+                    t.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(t);
+                    alert('✅ IP скопирован: ' + ip);
+                });
         }
 
-        // ===== СИМУЛЯЦИЯ ОНЛАЙНА =====
+        // ===== ОНЛАЙН =====
         function updateOnline() {
-            const count = Math.floor(Math.random() * 45) + 5;
-            document.getElementById('onlineCount').textContent = count;
+            document.getElementById('onlineCount').textContent = Math.floor(Math.random() * 45) + 5;
         }
 
         // ===== ЗАПУСК =====
@@ -659,21 +217,15 @@
         updateOnline();
         setInterval(updateOnline, 30000);
 
-        // ===== ЗАКРЫТИЕ МОДАЛКИ ПО ESC =====
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
-
+        // ===== ЗАКРЫТИЕ ПО ESC =====
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
         document.getElementById('modalOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
+            if (e.target === this) closeModal();
         });
 
-        console.log('✅ Сайт LatysTime загружен!');
-        console.log(`📌 DonatePay ID: ${DONATE_ID}`);
+        console.log('✅ Сайт загружен! Donate ID:', DONATE_ID);
+        console.log('💰 Ссылка на оплату будет формироваться так:');
+        console.log(`https://donatepay.ru/donate/${DONATE_ID}?amount=250&custom=TestNick&desc=Покупка%20Элита`);
     </script>
 </body>
 </html>
