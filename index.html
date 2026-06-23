@@ -564,7 +564,7 @@
             selectedProduct = null;
         }
 
-        // ===== ПОДТВЕРДИТЬ ПОКУПКУ =====
+        // ===== ПОДТВЕРДИТЬ ПОКУПКУ (ИСПРАВЛЕНО) =====
         function confirmPurchase() {
             const nickname = document.getElementById('nicknameInput').value.trim();
             if (!nickname) {
@@ -581,15 +581,14 @@
             // Закрываем модалку
             closeModal();
 
-            // Формируем ссылку на DonatePay
             const amount = selectedProduct.price;
             const productName = selectedProduct.name;
             
-            // Ссылка на оплату через DonatePay
+            // Формируем ссылку на DonatePay
             const donateUrl = `https://donatepay.ru/donate/${DONATE_ID}?amount=${amount}&custom=${encodeURIComponent(nickname)}&desc=${encodeURIComponent('Покупка: ' + productName)}`;
 
-            // Открываем в новом окне
-            window.open(donateUrl, '_blank');
+            // ===== ПЕРЕНАПРАВЛЯЕМ В ТЕКУЩЕЙ ВКЛАДКЕ =====
+            window.location.href = donateUrl;
 
             // Сохраняем информацию о покупке в localStorage
             const purchase = {
@@ -600,18 +599,16 @@
                 status: 'pending'
             };
             
-            // Сохраняем в локальное хранилище
             let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
             purchases.push(purchase);
             localStorage.setItem('purchases', JSON.stringify(purchases));
 
-            // ЗАГЛУШКА: ПОКАЗЫВАЕМ УВЕДОМЛЕНИЕ "УСПЕШНО" ЧЕРЕЗ 2 СЕКУНДЫ
+            // ЗАГЛУШКА: ПОКАЗЫВАЕМ УВЕДОМЛЕНИЕ "УСПЕШНО" ЧЕРЕЗ 5 СЕКУНД
             // (ПОТОМ ЗАМЕНИМ НА РЕАЛЬНЫЙ WEBHOOK ОТ DONATEPAY)
             setTimeout(() => {
                 showNotification();
-                // Отправляем запрос на сервер (заглушка)
                 sendToServer(nickname, productName);
-            }, 2000);
+            }, 5000);
         }
 
         // ===== ПОКАЗАТЬ УВЕДОМЛЕНИЕ "УСПЕШНО" =====
@@ -619,7 +616,6 @@
             const notification = document.getElementById('notification');
             notification.classList.add('show');
             
-            // Автоматически скрываем через 5 секунд
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 5000);
@@ -632,15 +628,7 @@
             console.log(`   Привилегия: ${product}`);
             console.log(`   Команда: lp user ${nickname} parent set ${product}`);
             
-            // ===== ПОТОМ ЗДЕСЬ БУДЕТ РЕАЛЬНЫЙ ЗАПРОС НА VDS =====
-            // fetch('https://твой-vds-ip/give_privilege.php', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         nickname: nickname,
-            //         product: product
-            //     })
-            // });
+            // ПОТОМ ЗДЕСЬ БУДЕТ РЕАЛЬНЫЙ ЗАПРОС НА VDS
         }
 
         // ===== КНОПКА "КОПИРОВАТЬ IP" =====
@@ -678,7 +666,6 @@
             }
         });
 
-        // ===== ЗАКРЫТИЕ МОДАЛКИ ПО КЛИКУ НА ОВЕРЛЕЙ =====
         document.getElementById('modalOverlay').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
@@ -687,7 +674,6 @@
 
         console.log('✅ Сайт LatysTime загружен!');
         console.log(`📌 DonatePay ID: ${DONATE_ID}`);
-        console.log('👻 Для связи с сервером используется RCON (будет позже)');
     </script>
 </body>
 </html>
