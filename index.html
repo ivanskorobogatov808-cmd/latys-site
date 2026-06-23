@@ -263,6 +263,158 @@
             margin-top: 10px;
         }
 
+        /* ===== МОДАЛЬНОЕ ОКНО ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal {
+            background: rgba(18, 14, 28, 0.95);
+            border: 1px solid rgba(255, 165, 0, 0.2);
+            border-radius: 30px;
+            padding: 40px 35px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal h2 {
+            color: #ffcc80;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .modal .product-name {
+            color: #b388ff;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .modal .product-price {
+            color: #ffab40;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 165, 0, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 18px;
+            outline: none;
+            transition: 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        .modal input:focus {
+            border-color: #b388ff;
+            box-shadow: 0 0 20px rgba(179, 136, 255, 0.15);
+        }
+
+        .modal input::placeholder {
+            color: #4a3f5e;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(145deg, #ff8a65, #e65100);
+            color: #0b0a0e;
+        }
+
+        .btn-confirm:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(255, 165, 0, 0.3);
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 2px solid #4a3f5e !important;
+            color: #9575cd;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== УВЕДОМЛЕНИЕ "УСПЕШНО" ===== */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 2000;
+            background: rgba(18, 14, 28, 0.95);
+            border: 2px solid #66bb6a;
+            border-radius: 20px;
+            padding: 20px 30px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            animation: slideIn 0.5s ease;
+        }
+
+        .notification.show {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .notification .icon {
+            font-size: 36px;
+        }
+
+        .notification .text {
+            font-size: 22px;
+            font-weight: 800;
+            color: #66bb6a;
+            letter-spacing: 2px;
+        }
+
         /* ===== АДАПТИВ ===== */
         @media (max-width: 700px) {
             h1 { font-size: 34px; }
@@ -274,12 +426,16 @@
             .product-card .price { font-size: 18px; }
             .section-title { font-size: 22px; }
             .online-number { font-size: 26px; }
+            .modal { padding: 30px 20px; }
+            .notification { top: 15px; right: 15px; padding: 15px 20px; }
+            .notification .text { font-size: 18px; }
         }
 
         @media (max-width: 450px) {
             .shop-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
             .product-card { padding: 16px 10px; }
             .btn-buy { font-size: 13px; padding: 8px 14px; }
+            .modal-buttons { flex-direction: column; }
         }
     </style>
 </head>
@@ -292,6 +448,26 @@
         <div class="ghost">💀</div>
         <div class="ghost">🦇</div>
         <div class="ghost">🧙</div>
+    </div>
+
+    <!-- ===== УВЕДОМЛЕНИЕ "УСПЕШНО" ===== -->
+    <div class="notification" id="notification">
+        <span class="icon">✅</span>
+        <span class="text">УСПЕШНО!</span>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2>💎 Покупка</h2>
+            <div class="product-name" id="modalProductName">Привилегия</div>
+            <div class="product-price" id="modalProductPrice">0 ₽</div>
+            <input type="text" id="nicknameInput" placeholder="Введите ваш ник" maxlength="16" />
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+                <button class="btn-confirm" onclick="confirmPurchase()">Оплатить</button>
+            </div>
+        </div>
     </div>
 
     <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
@@ -350,6 +526,12 @@
             { name: 'Восстановление прав', price: 400 }
         ];
 
+        // ===== ID DonatePay (твой) =====
+        const DONATE_ID = '1508516';
+
+        // ===== ПЕРЕМЕННЫЕ ДЛЯ МОДАЛКИ =====
+        let selectedProduct = null;
+
         // ===== ОТРИСОВКА КАРТОЧЕК =====
         function renderShop(containerId, items) {
             const container = document.getElementById(containerId);
@@ -361,15 +543,104 @@
                 card.innerHTML = `
                     <div class="name">${item.name}</div>
                     <div class="price">${item.price} ₽</div>
-                    <button class="btn-buy" onclick="buyItem('${item.name}', ${item.price})">Купить</button>
+                    <button class="btn-buy" onclick="openModal('${item.name}', ${item.price})">Купить</button>
                 `;
                 container.appendChild(card);
             });
         }
 
-        // ===== КНОПКА "КУПИТЬ" =====
-        function buyItem(name, price) {
-            alert(`🧛 Товар "${name}" (${price} ₽)\nСкоро здесь будет оплата!`);
+        // ===== ОТКРЫТЬ МОДАЛЬНОЕ ОКНО =====
+        function openModal(name, price) {
+            selectedProduct = { name, price };
+            document.getElementById('modalProductName').textContent = name;
+            document.getElementById('modalProductPrice').textContent = price + ' ₽';
+            document.getElementById('nicknameInput').value = '';
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        // ===== ЗАКРЫТЬ МОДАЛЬНОЕ ОКНО =====
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            selectedProduct = null;
+        }
+
+        // ===== ПОДТВЕРДИТЬ ПОКУПКУ =====
+        function confirmPurchase() {
+            const nickname = document.getElementById('nicknameInput').value.trim();
+            if (!nickname) {
+                alert('⚠️ Введите ник!');
+                return;
+            }
+            if (nickname.length < 3 || nickname.length > 16) {
+                alert('⚠️ Ник должен быть от 3 до 16 символов');
+                return;
+            }
+
+            if (!selectedProduct) return;
+
+            // Закрываем модалку
+            closeModal();
+
+            // Формируем ссылку на DonatePay
+            const amount = selectedProduct.price;
+            const productName = selectedProduct.name;
+            
+            // Ссылка на оплату через DonatePay
+            const donateUrl = `https://donatepay.ru/donate/${DONATE_ID}?amount=${amount}&custom=${encodeURIComponent(nickname)}&desc=${encodeURIComponent('Покупка: ' + productName)}`;
+
+            // Открываем в новом окне
+            window.open(donateUrl, '_blank');
+
+            // Сохраняем информацию о покупке в localStorage
+            const purchase = {
+                nickname: nickname,
+                product: productName,
+                price: amount,
+                date: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            // Сохраняем в локальное хранилище
+            let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+            purchases.push(purchase);
+            localStorage.setItem('purchases', JSON.stringify(purchases));
+
+            // ЗАГЛУШКА: ПОКАЗЫВАЕМ УВЕДОМЛЕНИЕ "УСПЕШНО" ЧЕРЕЗ 2 СЕКУНДЫ
+            // (ПОТОМ ЗАМЕНИМ НА РЕАЛЬНЫЙ WEBHOOK ОТ DONATEPAY)
+            setTimeout(() => {
+                showNotification();
+                // Отправляем запрос на сервер (заглушка)
+                sendToServer(nickname, productName);
+            }, 2000);
+        }
+
+        // ===== ПОКАЗАТЬ УВЕДОМЛЕНИЕ "УСПЕШНО" =====
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            // Автоматически скрываем через 5 секунд
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // ===== ОТПРАВКА НА СЕРВЕР (ЗАГЛУШКА) =====
+        function sendToServer(nickname, product) {
+            console.log(`📤 Отправка на сервер:`);
+            console.log(`   Игрок: ${nickname}`);
+            console.log(`   Привилегия: ${product}`);
+            console.log(`   Команда: lp user ${nickname} parent set ${product}`);
+            
+            // ===== ПОТОМ ЗДЕСЬ БУДЕТ РЕАЛЬНЫЙ ЗАПРОС НА VDS =====
+            // fetch('https://твой-vds-ip/give_privilege.php', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         nickname: nickname,
+            //         product: product
+            //     })
+            // });
         }
 
         // ===== КНОПКА "КОПИРОВАТЬ IP" =====
@@ -399,6 +670,24 @@
         renderShop('servicesList', services);
         updateOnline();
         setInterval(updateOnline, 30000);
+
+        // ===== ЗАКРЫТИЕ МОДАЛКИ ПО ESC =====
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // ===== ЗАКРЫТИЕ МОДАЛКИ ПО КЛИКУ НА ОВЕРЛЕЙ =====
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        console.log('✅ Сайт LatysTime загружен!');
+        console.log(`📌 DonatePay ID: ${DONATE_ID}`);
+        console.log('👻 Для связи с сервером используется RCON (будет позже)');
     </script>
 </body>
 </html>
